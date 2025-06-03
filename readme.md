@@ -1,0 +1,1 @@
+jalankan saja menggunakan live server kemudian pilih file excel berisi nama nama yang akan diundang, sebelumnya pastikan di dalam kode sudah mendefinisikan link yang akan kita gunakan. kemudian akan otomatis mendownload sebuah file excel berisi tautan undangan
