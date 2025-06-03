@@ -1,0 +1,116 @@
+/* --- Global Styles --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font yang lebih modern */
+    background-color: #e9ecef; /* Warna latar belakang yang lebih lembut */
+    margin: 0;
+    display: flex; /* Menggunakan flexbox untuk memusatkan konten */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Memastikan body mengisi seluruh tinggi viewport */
+    padding: 20px; /* Padding untuk jarak dari tepi viewport */
+    box-sizing: border-box; /* Memastikan padding tidak menambah ukuran elemen */
+}
+
+/* --- Container Styles --- */
+.container {
+    max-width: 600px;
+    width: 100%; /* Memastikan container mengisi lebar yang tersedia */
+    background-color: #ffffff;
+    padding: 30px; /* Padding yang lebih besar untuk ruang */
+    border-radius: 10px; /* Sudut membulat yang lebih halus */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Bayangan yang lebih lembut dan dalam */
+    text-align: center; /* Memusatkan teks di dalam container */
+}
+
+/* --- Header & Title Styles --- */
+.header {
+    font-size: 26px; /* Ukuran font yang sedikit lebih besar */
+    font-weight: 700; /* Ketebalan font yang lebih jelas */
+    color: #343a40; /* Warna teks yang lebih gelap */
+    margin-bottom: 15px; /* Sedikit mengurangi margin */
+}
+
+.title {
+    font-size: 32px; /* Ukuran judul yang lebih menonjol */
+    font-weight: 600;
+    color: #495057; /* Warna judul yang berbeda dari header */
+    margin-bottom: 30px; /* Margin bawah yang lebih besar */
+}
+
+/* --- Label & Input Styles --- */
+.label {
+    display: block; /* Memastikan label berada di baris terpisah */
+    font-size: 17px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px; /* Jarak antara label dan input */
+    text-align: left; /* Teks label rata kiri */
+}
+
+.file-input {
+    margin-bottom: 25px; /* Jarak bawah yang sedikit lebih besar */
+    width: 100%; /* Memastikan input file mengisi lebar container */
+    padding: 8px; /* Sedikit padding untuk input file */
+    border: 1px solid #ced4da; /* Border standar */
+    border-radius: 5px;
+    box-sizing: border-box; /* Penting untuk input width: 100% */
+}
+
+/* --- Button Styles --- */
+.button {
+    display: block;
+    width: 100%;
+    padding: 14px 20px; /* Padding yang lebih besar untuk area klik yang nyaman */
+    font-size: 18px; /* Ukuran font tombol yang lebih besar */
+    font-weight: 600;
+    text-align: center;
+    background-color: #28a745; /* Warna hijau yang lebih cerah dan umum */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transisi halus untuk hover */
+}
+
+.button:hover {
+    background-color: #218838; /* Warna hover yang sedikit lebih gelap */
+    transform: translateY(-2px); /* Efek angkat sedikit saat di-hover */
+}
+
+/* --- Message Styles (untuk pesan sukses/error dari JS) --- */
+.message {
+    margin-top: 25px; /* Jarak dari tombol */
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+    word-wrap: break-word; /* Memastikan teks panjang tidak meluber */
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* --- Link Input (Jika digunakan) --- */
+.link-input {
+    width: calc(100% - 22px); /* Menyesuaikan width dengan padding dan border */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 15px; /* Jarak dari elemen sebelumnya */
+    box-sizing: border-box;
+}
+
+.link-input:read-only {
+    background-color: #e9ecef; /* Warna latar belakang untuk input read-only */
+    cursor: default; /* Mengubah kursor saat read-only */
+}
