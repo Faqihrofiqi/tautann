@@ -1,58 +1,124 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Undangan Online</title>
+    <title>Generator Tautan Undangan</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-    <script>
-        function generateInvitationLinks() {
-            // Baca file .xlsx yang diunggah
-            var fileInput = document.getElementById("file");
-            var file = fileInput.files[0];
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var data = new Uint8Array(e.target.result);
-                var workbook = XLSX.read(data, { type: 'array' });
-
-                // Ambil daftar penerima undangan dari sheet pertama (misalnya, 'Sheet1')
-                var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 'A' });
-
-                // Generate invitation links
-                var links = [];
-                for (var i = 0; i < jsonData.length; i++) {
-                    var name = jsonData[i].A;
-                    var encodedName = encodeURIComponent(name.replace(/\s+/g, " "));
-                    var invitationLink = "https://www.linkacara.com/khitan-faqih?to=" + encodedName;
-                    links.push([invitationLink]);
-                }
-
-                // Buat workbook baru dengan tautan undangan
-                var newWorkbook = XLSX.utils.book_new();
-                var newWorksheet = XLSX.utils.aoa_to_sheet(links);
-                XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, "Undangan");
-
-                // Simpan workbook sebagai file .xlsx
-                var xlsxFile = XLSX.write(newWorkbook, { bookType: "xlsx", type: "array" });
-                var blob = new Blob([xlsxFile], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-                var url = URL.createObjectURL(blob);
-                var link = document.createElement("a");
-                link.href = url;
-                link.download = "undangan.xlsx";
-                link.click();
-            };
-            reader.readAsArrayBuffer(file);
-        }
-    </script>
 </head>
 <body>
     <div class="container">
         <div class="header">Faqih Project</div>
-        <h1 class="title">Undangan Online</h1>
-        <label for="file" class="label">Unggah File .xlsx:</label>
+        <h1 class="title">Generator Tautan Undangan Online</h1>
+        <label for="file" class="label">Unggah File .xlsx Daftar Nama:</label>
         <input type="file" id="file" accept=".xlsx" class="file-input" />
         <br>
-        <button onclick="generateInvitationLinks()" class="button">Buat Undangan</button>
+        <button onclick="generateInvitationLinks()" class="button">Buat Tautan Undangan</button>
+        <div id="message" class="message" style="display: none;"></div>
     </div>
+
+    <script>
+        function generateInvitationLinks() {
+            const fileInput = document.getElementById("file");
+            const messageDiv = document.getElementById("message");
+            const file = fileInput.files[0];
+
+            // Reset pesan
+            messageDiv.style.display = "none";
+            messageDiv.textContent = "";
+            messageDiv.classList.remove('success', 'error');
+
+            if (!file) {
+                showMessage("Harap pilih file .xlsx terlebih dahulu.", "error");
+                return;
+            }
+
+            if (!file.name.endsWith(".xlsx")) {
+                showMessage("File yang diunggah harus berformat .xlsx", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    // Ambil daftar penerima undangan dari sheet pertama (misalnya, 'Sheet1')
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    if (!worksheet) {
+                        showMessage("File Excel tidak memiliki lembar kerja yang valid.", "error");
+                        return;
+                    }
+
+                    // Menggunakan { header: 1 } untuk mendapatkan array of arrays, yang lebih mudah diolah
+                    // daripada { header: 'A' } yang menghasilkan objek dengan kunci 'A'.
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    if (jsonData.length === 0) {
+                        showMessage("File Excel kosong atau tidak memiliki data.", "error");
+                        return;
+                    }
+
+                    const links = [];
+                    // Asumsikan kolom pertama (indeks 0) berisi nama
+                    for (let i = 0; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (row && row[0]) { // Pastikan baris ada dan kolom pertama tidak kosong
+                            const name = String(row[0]).trim(); // Konversi ke string dan hapus spasi awal/akhir
+                            if (name) { // Hanya proses jika nama tidak kosong
+                                const encodedName = encodeURIComponent(name);
+                                const invitationLink = "https://luvenainvitation.me/wedding-saefal-fatma/?to=" + encodedName;
+                                links.push([invitationLink]);
+                            }
+                        }
+                    }
+
+                    if (links.length === 0) {
+                        showMessage("Tidak ada nama yang valid ditemukan di file Excel.", "error");
+                        return;
+                    }
+
+                    // Buat workbook baru dengan tautan undangan
+                    const newWorkbook = XLSX.utils.book_new();
+                    const newWorksheet = XLSX.utils.aoa_to_sheet(links);
+                    XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, "Tautan Undangan");
+
+                    // Simpan workbook sebagai file .xlsx
+                    const xlsxFile = XLSX.write(newWorkbook, { bookType: "xlsx", type: "array" });
+                    const blob = new Blob([xlsxFile], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                    
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = "tautan_undangan.xlsx"; // Nama file yang lebih deskriptif
+                    document.body.appendChild(link); // Penting untuk menambahkan ke body agar bisa di-klik di beberapa browser
+                    link.click();
+                    document.body.removeChild(link); // Hapus elemen 'a' setelah di-klik
+                    URL.revokeObjectURL(url); // Bersihkan URL objek
+
+                    showMessage("Tautan undangan berhasil dibuat dan diunduh!", "success");
+
+                } catch (error) {
+                    console.error("Error processing file:", error);
+                    showMessage("Terjadi kesalahan saat memproses file. Pastikan formatnya benar dan tidak rusak.", "error");
+                }
+            };
+
+            reader.onerror = function(error) {
+                console.error("Error reading file:", error);
+                showMessage("Terjadi kesalahan saat membaca file.", "error");
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showMessage(msg, type) {
+            const messageDiv = document.getElementById("message");
+            messageDiv.textContent = msg;
+            messageDiv.className = `message ${type}`; // Menggunakan class untuk styling
+            messageDiv.style.display = "block";
+        }
+    </script>
 </body>
 </html>
